@@ -263,8 +263,24 @@ Python Source
 
 # 📜 License
 
-MIT License
+This project is licensed under the Mozilla Public License Version 2.0 (MPL-2.0).
 
-자유롭게 사용, 수정 및 배포할 수 있습니다.
+You may use, modify, and distribute this software under the terms of the MPL-2.0.
+
+See the full license text:
+
+```
+Mozilla Public License Version 2.0
+```
+
+For more information, visit:
+
+https://mozilla.org/MPL/2.0/
+
+---
+
+본 프로젝트는 Mozilla Public License 2.0 (MPL-2.0)에 따라 배포됩니다.
+
+소프트웨어의 사용, 수정 및 배포는 MPL-2.0의 조건을 따라야 합니다.
 
 사용으로 인해 발생하는 문제에 대한 책임은 사용자에게 있습니다.
