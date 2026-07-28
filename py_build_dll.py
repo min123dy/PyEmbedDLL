@@ -57,16 +57,19 @@ def build_single_file_dll(target_py_path: str, output_dll_name: str = "output.dl
         
         target_files = [] # (절대 경로, 상대 저장 경로)
 
-        # 3-1. 기존 DLL 및 PYD 수집
-        search_dirs = [py_base / "DLLs", py_base, Path(os.environ.get("SystemRoot", "C:\\Windows")) / "System32"]
-        for d in search_dirs:
-            if d.exists():
-                for f in d.glob("*.pyd"):
-                    target_files.append((f, f.name))
-                for f in d.glob("python3*.dll"):
+        # 3-1. DLLs 디렉터리의 C-의존성 DLL, PYD 및 파이썬 핵심 DLL 수집
+        dlls_dir = py_base / "DLLs"
+        if dlls_dir.exists():
+            for f in dlls_dir.glob("*"):
+                # DLLs 폴더 내의 모든 .pyd 및 .dll(libffi-8.dll 등) 수집
+                if f.suffix.lower() in ('.pyd', '.dll'):
                     target_files.append((f, f.name))
 
-        # 3-2. [추가] 파이썬 표준 라이브러리(Lib) 전체 수집 (Lib/... 경로 유지)
+        # Python 루트 디렉터리의 python3.dll, python312.dll 등 수집
+        for f in py_base.glob("python3*.dll"):
+            target_files.append((f, f.name))
+
+        # 3-2. 파이썬 표준 라이브러리(Lib) 전체 수집 (Lib/... 경로 유지)
         lib_dir = py_base / "Lib"
         if lib_dir.exists():
             for root, dirs, files in os.walk(lib_dir):
@@ -146,7 +149,7 @@ struct ResourceEntry g_Resources[] = {
 __RESOURCE_ARRAY__
 };
 
-// [추가] 하위 폴더(Lib/...) 생성을 위한 재귀 디렉터리 생성 함수
+// 하위 폴더(Lib/...) 생성을 위한 재귀 디렉터리 생성 함수
 void CreateDirectoriesRecursive(const char* path) {
     char temp[MAX_PATH];
     char* p = NULL;
@@ -191,7 +194,7 @@ void ExtractEmbeddedResources() {
         char outFile[MAX_PATH];
         sprintf_s(outFile, MAX_PATH, "%s/%s", g_tempExtractDir, g_Resources[i].name);
 
-        // [추가] 파일 생성 전 해당 경로의 하위 디렉터리가 존재하는지 확인 및 자동 생성
+        // 파일 생성 전 해당 경로의 하위 디렉터리가 존재하는지 확인 및 자동 생성
         char dirPath[MAX_PATH];
         sprintf_s(dirPath, MAX_PATH, "%s", outFile);
         char* lastSlash = strrchr(dirPath, '/');
