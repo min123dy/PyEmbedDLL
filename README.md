@@ -1,4 +1,4 @@
-# PyDLLForge
+# PyEmbedDLL
 
 **Python Script → Standalone DLL Builder**
 
